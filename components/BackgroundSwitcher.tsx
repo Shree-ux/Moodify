@@ -34,8 +34,9 @@ export default function BackgroundSwitcher({
   const stableOnChange = useCallback(onChange, [onChange])
 
   useEffect(() => {
-    // Load themes from the JSON file
-    fetch('/wallpaper/themes.json')
+    // Load themes from the JSON file with cache busting
+    const timestamp = Date.now()
+    fetch(`/wallpaper/themes.json?t=${timestamp}`)
       .then(res => res.json())
       .then((data: ThemesConfig) => {
         setThemes(data)

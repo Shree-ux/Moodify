@@ -55,7 +55,8 @@ export default function HomePage() {
 
   // Load themes for slideshow
   useEffect(() => {
-    fetch('/wallpaper/themes.json')
+    const timestamp = Date.now()
+    fetch(`/wallpaper/themes.json?t=${timestamp}`)
       .then(res => res.json())
       .then((data) => {
         setThemes(data.themes)
