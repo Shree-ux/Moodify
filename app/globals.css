@@ -31,6 +31,15 @@ body {
   z-index: -1;
 }
 
+/* subtle fade/slide used for rotating quotes */
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateY(6px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+.animate-fadeSlide { animation: fadeSlide 6s ease-in-out; }
+
 .center-menu {
   @apply bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-white/10;
 }

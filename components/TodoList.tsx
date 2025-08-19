@@ -17,7 +17,7 @@ export default function TodoList() {
   async function fetchTodos() {
     const res = await fetch('/api/todos')
     const data = await res.json()
-    setTodos(data)
+    setTodos(Array.isArray(data) ? data : [])
   }
 
   useEffect(() => { fetchTodos() }, [])

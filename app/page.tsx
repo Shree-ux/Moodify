@@ -54,20 +54,22 @@ export default function HomePage() {
       <div className="video-overlay" />
 
       <div className="absolute inset-0 grid grid-rows-[auto_1fr_auto]">
-        <header className="flex items-center justify-between p-4">
-          <div className="text-sm tracking-wider uppercase text-white/80">Moodboard</div>
-          <div className="flex items-center gap-3">
-            <span className="text-white/90 font-mono text-lg" aria-label="Current time">{timeString}</span>
-            <BackgroundSwitcher onChange={(mode, url)=>{ setBgMode(mode); setBgUrl(url) }} />
-            <ProfileButton />
+        <header className="p-4">
+          <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+            <div className="text-sm tracking-wider uppercase text-white/80">Moodboard</div>
+            <div className="flex items-center gap-3">
+              <span className="text-white/90 font-mono text-lg" aria-label="Current time">{timeString}</span>
+              <BackgroundSwitcher onChange={(mode, url)=>{ setBgMode(mode); setBgUrl(url) }} />
+              <ProfileButton />
+            </div>
           </div>
         </header>
 
-        <section className="flex items-center justify-center">
+        <section className="flex items-center justify-center px-4">
           <CenterMenu />
         </section>
 
-        <section className="mx-auto mt-6 grid w-full max-w-5xl grid-cols-1 gap-4 px-4 md:grid-cols-2">
+        <section className="mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 gap-4 px-4 md:grid-cols-2">
           <Timer />
           <YouTubeMoodPlayer />
           <TodoList />
