@@ -1,20 +1,25 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
+import Timer from '@/components/Timer'
 import TodoList from '@/components/TodoList'
 import YouTubeMoodPlayer from '@/components/YouTubeMoodPlayer'
 import CenterMenu from '@/components/CenterMenu'
 import BackgroundSwitcher, { type BackgroundMode } from '@/components/BackgroundSwitcher'
 
-// removed unused menuItems
-
+// merged states and effects
 export default function HomePage() {
-  const [timeString, setTimeString] = useState(new Date().toLocaleTimeString())
+  const [timeString, setTimeString] = useState('')
   const [bgMode, setBgMode] = useState<BackgroundMode>('video')
   const [bgUrl, setBgUrl] = useState('/wallpaper/swiss-alps-moewalls-com.mp4')
   const [quoteIndex, setQuoteIndex] = useState(0)
   const [typed, setTyped] = useState('')
   const [showMusic, setShowMusic] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+  const [isSlideshowEnabled, setIsSlideshowEnabled] = useState(false)
+  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
+  const [themes, setThemes] = useState<any[]>([])
+
   const quotes = useMemo(
     () => [
       'Small steps every day.',
@@ -26,7 +31,45 @@ export default function HomePage() {
     []
   )
 
+  // Load themes for slideshow
   useEffect(() => {
+    const timestamp = Date.now()
+    fetch(`/wallpaper/themes.json?t=${timestamp}`)
+      .then(res => res.json())
+      .then((data) => {
+        setThemes(data.themes)
+        setCurrentThemeIndex(data.themes.findIndex((t: any) => t.key === data.defaultKey))
+      })
+      .catch(err => console.error('Failed to load themes for slideshow:', err))
+  }, [])
+
+  // Slideshow effect
+  useEffect(() => {
+    if (!isSlideshowEnabled || themes.length === 0) return
+
+    const slideshowInterval = setInterval(() => {
+      setCurrentThemeIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % themes.length
+        const nextTheme = themes[nextIndex]
+        
+        // Update background
+        setBgMode(nextTheme.type)
+        setBgUrl(nextTheme.url)
+        
+        console.log(`🎬 Slideshow: Switched to ${nextTheme.label}`)
+        return nextIndex
+      })
+    }, 8000) // Change every 8 seconds
+
+    return () => clearInterval(slideshowInterval)
+  }, [isSlideshowEnabled, themes])
+
+  useEffect(() => {
+    // Set mounted state to prevent hydration mismatch
+    setIsMounted(true)
+    // Set initial time
+    setTimeString(new Date().toLocaleTimeString())
+    
     const clock = setInterval(() => setTimeString(new Date().toLocaleTimeString()), 1000)
     const quoteTimer = setInterval(() => setQuoteIndex((i) => (i + 1) % quotes.length), 7000)
     return () => {
@@ -35,7 +78,7 @@ export default function HomePage() {
     }
   }, [quotes.length])
 
-  // simple typewriter effect for the current quote
+  // Typewriter effect for quote
   useEffect(() => {
     setTyped('')
     const target = quotes[quoteIndex]
@@ -48,6 +91,22 @@ export default function HomePage() {
     return () => clearInterval(id)
   }, [quoteIndex, quotes])
 
+  // Stabilize background change
+  const handleBackgroundChange = useCallback((mode: BackgroundMode, url: string) => {
+    setBgMode(mode)
+    setBgUrl(url)
+  }, [])
+
+  // Handle slideshow toggle
+  const handleSlideshowToggle = useCallback((enabled: boolean) => {
+    setIsSlideshowEnabled(enabled)
+    if (enabled) {
+      console.log('🎬 Slideshow enabled - backgrounds will cycle automatically')
+    } else {
+      console.log('⏸️ Slideshow disabled - background stays static')
+    }
+  }, [])
+
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
       {bgMode === 'video' ? (
@@ -57,7 +116,22 @@ export default function HomePage() {
       )}
       <div className="video-overlay" />
 
-
+      <div className="absolute inset-0 grid grid-rows-[auto_1fr_auto]">
+        <header className="p-4">
+          <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+            <div className="text-sm tracking-wider uppercase text-white/80">Moodboard</div>
+            <div className="flex items-center gap-3">
+              <span className="text-white/90 font-mono text-lg" aria-label="Current time">
+                {isMounted ? timeString : ''}
+              </span>
+              <BackgroundSwitcher 
+                onChange={handleBackgroundChange} 
+                onSlideshowToggle={handleSlideshowToggle}
+              />
+            </div>
+          </div>
+        </header>
+      </div>
 
       {/* center content */}
       <div className="relative z-10 grid place-items-center min-h-screen px-4 text-center">
@@ -84,18 +158,18 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* optional lists or widgets can live off-center – keeping tasks but without add bar */}
+      {/* optional lists or widgets */}
       <aside className="fixed left-6 bottom-28 hidden md:block z-10">
         <TodoList />
       </aside>
 
       {/* music player is hidden until requested */}
       {showMusic && (
-        <div className="fixed inset-0 z-30 grid place-items-center bg-black/60 p-4" onClick={()=>setShowMusic(false)}>
-          <div className="w-full max-w-3xl" onClick={(e)=>e.stopPropagation()}>
+        <div className="fixed inset-0 z-30 grid place-items-center bg-black/60 p-4" onClick={() => setShowMusic(false)}>
+          <div className="w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
             <YouTubeMoodPlayer />
             <div className="mt-3 flex justify-end">
-              <button className="px-3 py-2 rounded bg-white/10 hover:bg-white/20" onClick={()=>setShowMusic(false)}>Close</button>
+              <button className="px-3 py-2 rounded bg-white/10 hover:bg-white/20" onClick={() => setShowMusic(false)}>Close</button>
             </div>
           </div>
         </div>
@@ -107,5 +181,3 @@ export default function HomePage() {
     </main>
   )
 }
-
-
