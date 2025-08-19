@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import Timer from '@/components/Timer'
 import TodoList from '@/components/TodoList'
 import YouTubeMoodPlayer from '@/components/YouTubeMoodPlayer'
@@ -17,10 +17,31 @@ const menuItems = [
 ]
 
 export default function HomePage() {
-  const [timeString, setTimeString] = useState(new Date().toLocaleTimeString())
+  const [timeString, setTimeString] = useState('')
   const [bgMode, setBgMode] = useState<BackgroundMode>('video')
   const [bgUrl, setBgUrl] = useState('/wallpaper/swiss-alps-moewalls-com.mp4')
   const [quoteIndex, setQuoteIndex] = useState(0)
+  const [isMounted, setIsMounted] = useState(false)
+  const [isSlideshowEnabled, setIsSlideshowEnabled] = useState(false)
+  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
+  const [themes, setThemes] = useState<any[]>([])
+  
+  // Stabilize the onChange function to prevent BackgroundSwitcher from resetting
+  const handleBackgroundChange = useCallback((mode: BackgroundMode, url: string) => {
+    setBgMode(mode)
+    setBgUrl(url)
+  }, [])
+
+  // Handle slideshow toggle
+  const handleSlideshowToggle = useCallback((enabled: boolean) => {
+    setIsSlideshowEnabled(enabled)
+    if (enabled) {
+      console.log('🎬 Slideshow enabled - backgrounds will cycle automatically')
+    } else {
+      console.log('⏸️ Slideshow disabled - background stays static')
+    }
+  }, [])
+
   const quotes = useMemo(
     () => [
       'Small steps every day.',
@@ -32,7 +53,44 @@ export default function HomePage() {
     []
   )
 
+  // Load themes for slideshow
   useEffect(() => {
+    fetch('/wallpaper/themes.json')
+      .then(res => res.json())
+      .then((data) => {
+        setThemes(data.themes)
+        setCurrentThemeIndex(data.themes.findIndex((t: any) => t.key === data.defaultKey))
+      })
+      .catch(err => console.error('Failed to load themes for slideshow:', err))
+  }, [])
+
+  // Slideshow effect
+  useEffect(() => {
+    if (!isSlideshowEnabled || themes.length === 0) return
+
+    const slideshowInterval = setInterval(() => {
+      setCurrentThemeIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % themes.length
+        const nextTheme = themes[nextIndex]
+        
+        // Update background
+        setBgMode(nextTheme.type)
+        setBgUrl(nextTheme.url)
+        
+        console.log(`🎬 Slideshow: Switched to ${nextTheme.label}`)
+        return nextIndex
+      })
+    }, 8000) // Change every 8 seconds
+
+    return () => clearInterval(slideshowInterval)
+  }, [isSlideshowEnabled, themes])
+
+  useEffect(() => {
+    // Set mounted state to prevent hydration mismatch
+    setIsMounted(true)
+    // Set initial time
+    setTimeString(new Date().toLocaleTimeString())
+    
     const clock = setInterval(() => setTimeString(new Date().toLocaleTimeString()), 1000)
     const quoteTimer = setInterval(
       () => setQuoteIndex((i) => (i + 1) % quotes.length),
@@ -58,8 +116,13 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
             <div className="text-sm tracking-wider uppercase text-white/80">Moodboard</div>
             <div className="flex items-center gap-3">
-              <span className="text-white/90 font-mono text-lg" aria-label="Current time">{timeString}</span>
-              <BackgroundSwitcher onChange={(mode, url)=>{ setBgMode(mode); setBgUrl(url) }} />
+              <span className="text-white/90 font-mono text-lg" aria-label="Current time">
+                {isMounted ? timeString : ''}
+              </span>
+              <BackgroundSwitcher 
+                onChange={handleBackgroundChange} 
+                onSlideshowToggle={handleSlideshowToggle}
+              />
               <ProfileButton />
             </div>
           </div>
@@ -82,7 +145,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="flex items-center gap-2 text-xs text-white/70">
-            <span>Unsplash / 4K Wallpapers / YouTube theme placeholders</span>
+            <span>4K Wallpapers / YouTube theme placeholders</span>
           </div>
         </footer>
       </div>
