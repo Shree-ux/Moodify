@@ -1,10 +1,14 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from 'react'
 
 type Profile = { name: string; email: string }
 
-export default function ProfileButton() {
+type ProfileButtonProps = {
+  renderTrigger?: (open: () => void) => React.ReactNode
+}
+
+export default function ProfileButton({ renderTrigger }: ProfileButtonProps) {
   const [open, setOpen] = useState(false)
   const [profile, setProfile] = useState<Profile>({ name: '', email: '' })
 
@@ -22,7 +26,11 @@ export default function ProfileButton() {
 
   return (
     <>
-      <button className="rounded-full bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1 text-sm" onClick={() => setOpen(true)}>Profile</button>
+      {renderTrigger ? (
+        renderTrigger(() => setOpen(true))
+      ) : (
+        <button className="rounded-full bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1 text-sm" onClick={() => setOpen(true)}>Profile</button>
+      )}
       {open && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/60">
           <div className="w-full max-w-sm bg-zinc-900 text-white rounded-xl border border-white/10 p-4">

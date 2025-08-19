@@ -47,10 +47,7 @@ export default function TodoList() {
 
   return (
     <div className="w-full max-w-md bg-white/10 border border-white/10 rounded-xl p-4">
-      <form onSubmit={addTodo} className="flex gap-2 mb-3">
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Add a task" className="flex-1 bg-black/30 border border-white/20 rounded px-3 py-2 outline-none" />
-        <button disabled={loading} className="px-3 py-2 rounded bg-white/10 hover:bg-white/20">Add</button>
-      </form>
+      {/* input removed per requirements */}
       <ul className="space-y-2">
         {todos.map((t) => (
           <li key={t._id} className="flex items-center justify-between bg-black/30 border border-white/10 rounded px-3 py-2">
