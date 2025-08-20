@@ -19,3 +19,4 @@ pnpm-debug.log*
 # wallpapers - keep folder but ignore files
 public/wallpaper/*
 !public/wallpaper/.keep
+.DS_Store
