@@ -6,12 +6,10 @@ import YouTubeMoodPlayer from '@/components/YouTubeMoodPlayer'
 import CenterMenu from '@/components/CenterMenu'
 import BackgroundSwitcher, { type BackgroundMode } from '@/components/BackgroundSwitcher'
 
-// removed unused menuItems
-
 export default function HomePage() {
   const [timeString, setTimeString] = useState(new Date().toLocaleTimeString())
   const [bgMode, setBgMode] = useState<BackgroundMode>('video')
-  const [bgUrl, setBgUrl] = useState('/wallpaper/swiss-alps-moewalls-com.mp4')
+  const [bgUrl, setBgUrl] = useState('/wallpaper/autumn-fuji-moewalls-com.mp4')
   const [quoteIndex, setQuoteIndex] = useState(0)
   const [typed, setTyped] = useState('')
   const [showMusic, setShowMusic] = useState(false)
@@ -48,6 +46,11 @@ export default function HomePage() {
     return () => clearInterval(id)
   }, [quoteIndex, quotes])
 
+  const handleBackgroundChange = (mode: BackgroundMode, url: string) => {
+    setBgMode(mode)
+    setBgUrl(url)
+  }
+
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
       {bgMode === 'video' ? (
@@ -56,8 +59,6 @@ export default function HomePage() {
         <img className="video-bg object-cover" src={bgUrl} alt="background" />
       )}
       <div className="video-overlay" />
-
-
 
       {/* center content */}
       <div className="relative z-10 grid place-items-center min-h-screen px-4 text-center">
@@ -75,6 +76,11 @@ export default function HomePage() {
           </div>
           <p className="mx-auto max-w-2xl text-white/90 text-lg md:text-2xl min-h-[1.5em]">{typed}</p>
         </div>
+      </div>
+
+      {/* background switcher */}
+      <div className="fixed top-6 right-6 z-20">
+        <BackgroundSwitcher onChange={handleBackgroundChange} />
       </div>
 
       {/* bottom-centered menu */}
