@@ -8,38 +8,18 @@ export async function GET() {
     const todos = await Todo.find().sort({ createdAt: -1 }).lean()
     return NextResponse.json(todos)
   } catch (e: any) {
-    console.error('GET /api/todos error:', e)
-    return NextResponse.json(
-      { error: e?.message || 'Database connection failed' }, 
-      { status: 500 }
-    )
+    return NextResponse.json({ error: e?.message || 'DB error' }, { status: 500 })
   }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    
-    if (!body?.title || typeof body.title !== 'string') {
-      return NextResponse.json(
-        { error: 'Title is required and must be a string' }, 
-        { status: 400 }
-      )
-    }
-
     await connectToDatabase()
-    const todo = await Todo.create({ 
-      title: body.title.trim(), 
-      dueAt: body?.dueAt ? new Date(body.dueAt) : undefined 
-    })
-    
+    const todo = await Todo.create({ title: body?.title, dueAt: body?.dueAt })
     return NextResponse.json(todo, { status: 201 })
   } catch (e: any) {
-    console.error('POST /api/todos error:', e)
-    return NextResponse.json(
-      { error: e?.message || 'Failed to create todo' }, 
-      { status: 500 }
-    )
+    return NextResponse.json({ error: e?.message || 'DB error' }, { status: 500 })
   }
 }
 

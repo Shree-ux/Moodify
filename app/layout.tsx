@@ -2,7 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Moodify',
+  title: 'Moodboard Focus',
   description: 'Focus dashboard with mood playlists, tasks, and live wallpapers',
 }
 
