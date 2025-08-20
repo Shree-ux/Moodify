@@ -2,32 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --overlay: rgba(0, 0, 0, 0.35);
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-html, body, #__next {
-  height: 100%;
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
-body {
-  @apply bg-black text-white antialiased;
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Custom audio progress bar */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #10b981;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #059669;
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #10b981;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #059669;
+}
+
+/* Video background */
 .video-bg {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  z-index: -2;
+  z-index: -1;
 }
 
 .video-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--overlay);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
   z-index: -1;
 }
 
@@ -40,88 +92,55 @@ body {
 }
 .animate-fadeSlide { animation: fadeSlide 6s ease-in-out; }
 
+/* Center menu */
 .center-menu {
-  @apply bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-white/10;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Universe.io menu styles adapted for Tailwind utility usage */
 .menu {
-  padding: 0.5rem;
-  background-color: rgba(255,255,255,0.08);
-  position: relative;
   display: flex;
-  justify-content: center;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.2);
+  gap: 1rem;
+  align-items: center;
 }
 
 .link {
-  display: inline-flex;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  width: 70px;
-  height: 50px;
-  border-radius: 8px;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  transform-origin: center left;
-  transition: width 0.2s ease-in;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  color: inherit;
+  min-width: 80px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.link:before {
-  position: absolute;
-  z-index: -1;
-  content: "";
-  display: block;
-  border-radius: 8px;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  transform: translateX(100%);
-  transition: transform 0.2s ease-in;
-  transform-origin: center right;
-  background-color: rgba(255,255,255,0.12);
-}
-
-.link:hover,
-.link:focus {
-  outline: 0;
-  width: 130px;
-}
-
-.link:hover:before,
-.link:focus:before,
-.link:hover .link-title,
-.link:focus .link-title {
-  transform: translateX(0);
-  opacity: 1;
+.link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .link-icon {
-  width: 28px;
-  height: 28px;
-  display: block;
-  flex-shrink: 0;
-  left: 18px;
-  position: absolute;
-}
-
-.link-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .link-title {
-  transform: translateX(100%);
-  transition: transform 0.2s ease-in;
-  transform-origin: center right;
-  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
   text-align: center;
-  text-indent: 28px;
-  width: 100%;
+  line-height: 1;
 }
 
 

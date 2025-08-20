@@ -55,7 +55,7 @@ export default function TodoList() {
               <input type="checkbox" checked={t.completed} onChange={() => toggleTodo(t._id, t.completed)} />
               <span className={t.completed ? 'line-through text-white/60' : ''}>{t.title}</span>
             </label>
-            <button className="text-sm text-red-300 hover:text-red-200" onClick={() => removeTodo(t._id)}>Delete</button>
+            <button className="text-sm bg-transparent hover:bg-white/10 text-red-300 hover:text-red-200 px-2 py-1 rounded border border-red-300/20 transition-colors" onClick={() => removeTodo(t._id)}>Delete</button>
           </li>
         ))}
       </ul>
