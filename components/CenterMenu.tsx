@@ -1,15 +1,7 @@
-import ProfileButton from '@/components/ProfileButton'
 import WallpaperButton from '@/components/WallpaperButton'
-import MiniSpotifyPlayer from '@/components/MiniSpotifyPlayer'
 import { useState } from 'react'
 
-export default function CenterMenu({ onMusic, onWallpaperChange }: { onMusic?: () => void, onWallpaperChange?: (url: string) => void }) {
-  const [showSpotify, setShowSpotify] = useState(false)
-
-  const handleSpotifyClick = () => {
-    console.log('Spotify button clicked!')
-    setShowSpotify(true)
-  }
+export default function CenterMenu({ onMusic, onWallpaperChange, onTodo }: { onMusic?: () => void, onWallpaperChange?: (url: string) => void, onTodo?: () => void }) {
 
   const handleWallpaperChange = (url: string) => {
     console.log('Wallpaper change requested:', url)
@@ -22,15 +14,6 @@ export default function CenterMenu({ onMusic, onWallpaperChange }: { onMusic?: (
     <>
       <div className="center-menu p-3">
         <div className="menu">
-          <a href="#" className="link">
-            <span className="link-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256">
-                <rect width="256" height="256" fill="none"></rect>
-                <path d="M213.3815,109.61945,133.376,36.88436a8,8,0,0,0-10.76339.00036l-79.9945,72.73477A8,8,0,0,0,40,115.53855V208a8,8,0,0,0,8,8H208a8,8,0,0,0,8-8V115.53887A8,8,0,0,0,213.3815,109.61945Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></path>
-              </svg>
-            </span>
-            <span className="link-title">Home</span>
-          </a>
           <a href="#" className="link" onClick={(e)=>{ e.preventDefault(); onMusic && onMusic(); }}>
             <span className="link-icon">
               {/* YouTube icon */}
@@ -43,44 +26,30 @@ export default function CenterMenu({ onMusic, onWallpaperChange }: { onMusic?: (
             <span className="link-title">YouTube</span>
           </a>
           <button 
-            onClick={handleSpotifyClick} 
+            onClick={() => onTodo && onTodo()} 
             className="link"
           >
             <span className="link-icon">
-              {/* Spotify icon */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 256 256" fill="currentColor">
+              {/* Book icon */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256">
                 <rect width="256" height="256" fill="none"></rect>
-                <circle cx="128" cy="128" r="84" stroke="currentColor" strokeWidth="16" fill="none"></circle>
-                <path d="M76 112c40-10 64-6 96 6" stroke="currentColor" strokeWidth="12" fill="none" strokeLinecap="round"/>
-                <path d="M80 136c36-8 58-6 88 6" stroke="currentColor" strokeWidth="10" fill="none" strokeLinecap="round"/>
-                <path d="M84 156c28-6 48-4 72 6" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round"/>
+                <path d="M48,40H208a8,8,0,0,1,8,8V200a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V48A8,8,0,0,1,48,40Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></path>
+                <path d="M48,40V88a8,8,0,0,0,8,8H200a8,8,0,0,0,8-8V40" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></path>
+                <line x1="88" y1="104" x2="168" y2="104" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></line>
+                <line x1="88" y1="136" x2="168" y2="136" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></line>
+                <line x1="88" y1="168" x2="120" y2="168" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></line>
               </svg>
             </span>
-            <span className="link-title">Spotify</span>
+            <span className="link-title">Todo</span>
           </button>
+
           {onWallpaperChange && (
             <WallpaperButton onWallpaperChange={handleWallpaperChange} />
           )}
-          <ProfileButton
-            renderTrigger={(open) => (
-              <a href="#" className="link" onClick={(e)=>{ e.preventDefault(); open(); }}>
-                <span className="link-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <circle cx="128" cy="96" r="64" fill="none" stroke="currentColor" strokeMiterlimit="10" strokeWidth="16"></circle>
-                    <path d="M30.989,215.99064a112.03731,112.03731,0,0,1,194.02311.002" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></path>
-                  </svg>
-                </span>
-                <span className="link-title">Profile</span>
-              </a>
-            )}
-          />
         </div>
       </div>
 
-      {showSpotify && (
-        <MiniSpotifyPlayer onClose={() => setShowSpotify(false)} />
-      )}
+
     </>
   )
 }
