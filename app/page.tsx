@@ -4,14 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import TodoList from '@/components/TodoList'
 import YouTubeMoodPlayer from '@/components/YouTubeMoodPlayer'
 import CenterMenu from '@/components/CenterMenu'
-import BackgroundSwitcher, { type BackgroundMode } from '@/components/BackgroundSwitcher'
 
 // removed unused menuItems
 
 export default function HomePage() {
   const [timeString, setTimeString] = useState('')
   const [mounted, setMounted] = useState(false)
-  const [bgMode, setBgMode] = useState<BackgroundMode>('video')
+  const [bgMode, setBgMode] = useState<'video' | 'image'>('video')
   const [bgUrl, setBgUrl] = useState('/wallpaper/autumn-fuji-moewalls-com.mp4')
   const [quoteIndex, setQuoteIndex] = useState(0)
   const [typed, setTyped] = useState('')
