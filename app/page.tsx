@@ -23,6 +23,9 @@ export default function HomePage() {
   // Wallpaper slideshow array - using actual available files
   const wallpapers = [
     '/wallpaper/autumn-fuji-moewalls-com.mp4',
+    '/wallpaper/minecraft-autumn-mountains-moewalls-com.mp4',
+    '/wallpaper/toyota-ae86-trueno-drifting-initial-d-moewalls-com.mp4',
+    '/wallpaper/asuka-x-evangelion-unit-02-moewalls-com.mp4',
     '/wallpaper/cherry-blossom-tree-on-volcano-moewalls-com.mp4',
     '/wallpaper/japanese-town-cloudy-day-moewalls-com.mp4',
     '/wallpaper/torii-gate-fuji-mountain-sakura-lake-moewalls-com.mp4',
@@ -119,15 +122,27 @@ export default function HomePage() {
             />
           </button>
           {slideshowEnabled && (
-            <div className="flex gap-1">
-              {wallpapers.map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                    index === currentWallpaperIndex ? 'bg-white/80' : 'bg-white/30'
-                  }`}
-                />
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1">
+                {wallpapers.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                      index === currentWallpaperIndex ? 'bg-white/80' : 'bg-white/30'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-white/60 text-xs font-medium">
+                {currentWallpaperIndex === 0 && 'Autumn Fuji'}
+                {currentWallpaperIndex === 1 && 'Minecraft Autumn Mountains'}
+                {currentWallpaperIndex === 2 && 'Toyota AE86'}
+                {currentWallpaperIndex === 3 && 'Evangelion'}
+                {currentWallpaperIndex === 4 && 'Cherry Blossom Volcano'}
+                {currentWallpaperIndex === 5 && 'Japanese Town'}
+                {currentWallpaperIndex === 6 && 'Torii Gate & Fuji'}
+                {currentWallpaperIndex === 7 && 'Winter Night Train'}
+              </span>
             </div>
           )}
         </div>
