@@ -4,14 +4,13 @@ import { useEffect, useMemo, useState } from 'react'
 import TodoList from '@/components/TodoList'
 import YouTubeMoodPlayer from '@/components/YouTubeMoodPlayer'
 import CenterMenu from '@/components/CenterMenu'
-
-// removed unused menuItems
+import { videoThemes } from '@/lib/videoConfig'
 
 export default function HomePage() {
   const [timeString, setTimeString] = useState('')
   const [mounted, setMounted] = useState(false)
   const [bgMode, setBgMode] = useState<'video' | 'image'>('video')
-  const [bgUrl, setBgUrl] = useState('/wallpaper/autumn-fuji-moewalls-com.mp4')
+  const [bgUrl, setBgUrl] = useState(videoThemes[0].url) // Use first S3 video as default
   const [quoteIndex, setQuoteIndex] = useState(0)
   const [typed, setTyped] = useState('')
   const [showMusic, setShowMusic] = useState(false)
@@ -19,18 +18,12 @@ export default function HomePage() {
   const [backgroundVideoId, setBackgroundVideoId] = useState('UI5NKkW8acM')
   const [showBackgroundPlayer, setShowBackgroundPlayer] = useState(true)
   const [slideshowEnabled, setSlideshowEnabled] = useState(false)
+  const [isVideoLoading, setIsVideoLoading] = useState(false)
   
-  // Wallpaper slideshow array - using actual available files
-  const wallpapers = [
-    '/wallpaper/autumn-fuji-moewalls-com.mp4',
-    '/wallpaper/minecraft-autumn-mountains-moewalls-com.mp4',
-    '/wallpaper/toyota-ae86-trueno-drifting-initial-d-moewalls-com.mp4',
-    '/wallpaper/asuka-x-evangelion-unit-02-moewalls-com.mp4',
-    '/wallpaper/cherry-blossom-tree-on-volcano-moewalls-com.mp4',
-    '/wallpaper/japanese-town-cloudy-day-moewalls-com.mp4',
-    '/wallpaper/torii-gate-fuji-mountain-sakura-lake-moewalls-com.mp4',
-    '/wallpaper/winter-night-train-moewalls-com.mp4'
-  ]
+  // Wallpaper slideshow array - using S3 URLs from video configuration
+  const wallpapers = videoThemes.map(theme => theme.url)
+  console.log('Available wallpapers:', wallpapers)
+  console.log('Current bgUrl:', bgUrl)
   const [currentWallpaperIndex, setCurrentWallpaperIndex] = useState(0)
   const quotes = useMemo(
     () => [
@@ -86,17 +79,53 @@ export default function HomePage() {
 
   const handleWallpaperChange = (url: string) => {
     console.log('Main page: Wallpaper change requested:', url)
+    console.log('Previous bgUrl was:', bgUrl)
+    console.log('Setting background URL to:', url)
+    
     setBgUrl(url)
     setBgMode('video')
+    console.log('Background mode set to video, URL set to:', url)
   }
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden">
       {bgMode === 'video' && (slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl) ? (
-        <video className="video-bg" autoPlay muted loop playsInline src={slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl} />
+        <video 
+          key={slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl}
+          className="video-bg transition-opacity duration-500" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          preload="metadata"
+          src={slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl}
+          onLoadStart={() => {
+            console.log('Video loading started:', slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl)
+            setIsVideoLoading(true)
+          }}
+          onCanPlay={() => {
+            console.log('Video can play:', slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl)
+            setIsVideoLoading(false)
+          }}
+          onError={(e) => {
+            console.error('Video error:', e, 'URL:', slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl)
+            setIsVideoLoading(false)
+          }}
+        />
       ) : bgMode === 'image' && (slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl) ? (
         <img className="video-bg object-cover" src={slideshowEnabled ? wallpapers[currentWallpaperIndex] : bgUrl} alt="background" />
       ) : null}
+      
+      {/* Loading overlay */}
+      {isVideoLoading && (
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50">
+          <div className="bg-white/10 backdrop-blur rounded-lg p-6 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white text-lg">Loading Wallpaper...</p>
+          </div>
+        </div>
+      )}
+      
       <div className="video-overlay" />
 
       {/* top header with logo and slideshow toggle */}
@@ -134,14 +163,7 @@ export default function HomePage() {
                 ))}
               </div>
               <span className="text-white/60 text-xs font-medium">
-                {currentWallpaperIndex === 0 && 'Autumn Fuji'}
-                {currentWallpaperIndex === 1 && 'Minecraft Autumn Mountains'}
-                {currentWallpaperIndex === 2 && 'Toyota AE86'}
-                {currentWallpaperIndex === 3 && 'Evangelion'}
-                {currentWallpaperIndex === 4 && 'Cherry Blossom Volcano'}
-                {currentWallpaperIndex === 5 && 'Japanese Town'}
-                {currentWallpaperIndex === 6 && 'Torii Gate & Fuji'}
-                {currentWallpaperIndex === 7 && 'Winter Night Train'}
+                {videoThemes[currentWallpaperIndex]?.label || 'Unknown'}
               </span>
             </div>
           )}

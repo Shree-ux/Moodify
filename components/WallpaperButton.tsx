@@ -65,11 +65,12 @@ export default function WallpaperButton({ onWallpaperChange }: { onWallpaperChan
               >
                 <div className="w-12 h-8 bg-gray-800 rounded overflow-hidden flex-shrink-0">
                   <video 
-                    src={wallpaper.thumbnail} 
+                    src={wallpaper.url} 
                     className="w-full h-full object-cover"
                     muted 
                     loop 
                     playsInline
+                    preload="metadata"
                   />
                 </div>
                 <span className="text-left">{wallpaper.label}</span>
