@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { videoThemes } from '@/lib/videoConfig'
 
 export default function WallpaperButton({ onWallpaperChange }: { onWallpaperChange: (url: string) => void }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -17,39 +18,6 @@ export default function WallpaperButton({ onWallpaperChange }: { onWallpaperChan
     console.log('Wallpaper button clicked!')
     setIsOpen(!isOpen)
   }
-
-  const wallpapers = [
-    {
-      key: "autumn-fuji",
-      label: "Autumn Fuji",
-      url: "/wallpaper/autumn-fuji-moewalls-com.mp4",
-      thumbnail: "/wallpaper/autumn-fuji-moewalls-com.mp4"
-    },
-    {
-      key: "cherry-blossom",
-      label: "Cherry Blossom",
-      url: "/wallpaper/cherry-blossom-tree-on-volcano-moewalls-com.mp4",
-      thumbnail: "/wallpaper/cherry-blossom-tree-on-volcano-moewalls-com.mp4"
-    },
-    {
-      key: "east-town",
-      label: "East Town",
-      url: "/wallpaper/japanese-town-cloudy-day-moewalls-com.mp4",
-      thumbnail: "/wallpaper/japanese-town-cloudy-day-moewalls-com.mp4"
-    },
-    {
-      key: "spring",
-      label: "Spring",
-      url: "/wallpaper/torii-gate-fuji-mountain-sakura-lake-moewalls-com.mp4",
-      thumbnail: "/wallpaper/torii-gate-fuji-mountain-sakura-lake-moewalls-com.mp4"
-    },
-    {
-      key: "winter-night",
-      label: "Winter Night",
-      url: "/wallpaper/winter-night-train-moewalls-com.mp4",
-      thumbnail: "/wallpaper/winter-night-train-moewalls-com.mp4"
-    }
-  ]
 
   return (
     <div className="relative">
@@ -87,7 +55,7 @@ export default function WallpaperButton({ onWallpaperChange }: { onWallpaperChan
           )}
           
           <div className="space-y-2">
-            {wallpapers.map((wallpaper) => (
+            {videoThemes.map((wallpaper) => (
               <button
                 key={wallpaper.key}
                 onClick={() => handleThemeSelect(wallpaper.url, wallpaper.label)}
