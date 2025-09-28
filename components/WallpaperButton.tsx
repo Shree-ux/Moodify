@@ -23,16 +23,16 @@ export default function WallpaperButton({ onWallpaperChange }: { onWallpaperChan
     <div className="relative">
       <button
         onClick={handleButtonClick}
-        className="link"
+        className="Btn wallpaper"
       >
-        <span className="link-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256">
+        <div className="svgIcon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
             <rect width="256" height="256" fill="none"></rect>
             <path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM80,200a16,16,0,0,1-16-16V88a16,16,0,0,1,16-16h96a16,16,0,0,1,16,16v96a16,16,0,0,1-16,16Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></path>
             <circle cx="88" cy="72" r="8" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></circle>
           </svg>
-        </span>
-        <span className="link-title">Wallpaper</span>
+        </div>
+        <div className="text">Wallpaper</div>
       </button>
 
       {isOpen && (

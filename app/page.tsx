@@ -138,18 +138,17 @@ export default function HomePage() {
         {/* Slideshow Toggle */}
         <div className="flex items-center gap-2">
           <span className="text-white/60 text-xs font-medium">Slideshow</span>
-          <button
-            onClick={() => setSlideshowEnabled(!slideshowEnabled)}
-            className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors focus:outline-none focus:ring-1 focus:ring-white/30 focus:ring-offset-1 focus:ring-offset-transparent ${
-              slideshowEnabled ? 'bg-white/30' : 'bg-white/20'
-            }`}
-          >
-            <span
-              className={`inline-block h-3 w-3 transform rounded-full bg-white/90 transition-transform ${
-                slideshowEnabled ? 'translate-x-5' : 'translate-x-0.5'
-              }`}
-            />
-          </button>
+          <div className="checkbox-wrapper-5">
+            <div className="check">
+              <input 
+                type="checkbox" 
+                id="slideshow-toggle"
+                checked={slideshowEnabled}
+                onChange={() => setSlideshowEnabled(!slideshowEnabled)}
+              />
+              <label htmlFor="slideshow-toggle"></label>
+            </div>
+          </div>
           {slideshowEnabled && (
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
